@@ -41,4 +41,17 @@ void sendCoMs() {
     oscP5.send(myMessage, myRemoteLocation);
   }
 }
+void sendPCs() {
+
+  for (COM c: kinectData.coms) {
+    OscMessage myMessage = new OscMessage("/pc");
+    myMessage.add(K);
+    myMessage.add(c.id);
+    byte[] bytes = new byte[1200];
+    for(int i = 0; i < 1200; i++) bytes[i] = 0;
+    c.toBytes(bytes);
+    myMessage.add(bytes);
+    oscP5.send(myMessage, myRemoteLocation);
+  }
+}
 

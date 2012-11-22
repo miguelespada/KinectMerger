@@ -27,7 +27,7 @@ KinectData kinectData;
 
 String remoteHost;
 int remotePort, localPort;
-boolean bSendCOMData;
+boolean bSendCOMData, bSendPCData;
 
 boolean saving = false;
 
@@ -38,16 +38,12 @@ void setup()
   
   loadSettings();
   K = loadSetting("KINECT_ID", 0);
-  
-  println("I'm kinect id: " + K);
   remoteHost = loadSetting("REMOTE_HOST", "localhost");
   localPort = loadSetting("LOCAL_PORT", 12000);
   remotePort = loadSetting("REMOTE_PORT", 12000);
   steps = loadSetting("STEPS", 6);
   bSendCOMData =  loadSetting("SEND_COM_DATA", true);
- 
-  if(bSendCOMData) println("Sending COM data [Yes]");
-  else println("Sending COM data [No]");
+  bSendPCData =  loadSetting("SEND_PC_DATA", true);
   
   size(800, 600, P3D);
   //context = new SimpleOpenNI(this,SimpleOpenNI.RUN_MODE_MULTI_THREADED);
@@ -94,20 +90,24 @@ void draw()
   
   context.drawCamFrustum();
   
-  if(bSendCOMData) {
-    sendCoMs();
-    if(frameRate % 30 == 0) sendPing(); 
-  }
+  if(frameRate % 30 == 0) sendPing(); 
+  
+  if(bSendCOMData) sendCoMs();
+  
+  if(bSendPCData) sendPCs();
+  
+  
   textMode(SCREEN);
   fill(255);
   textSize(12);
   text("FPS " + frameRate, 10, 10);
-  text("Kinect ID " + K, 10, 10);
-  text("Local host " + oscP5.ip() + " " + oscP5.properties().listeningPort(), 10, 25);
-  text("Remote host " + remoteHost + " " + remotePort, 10, 40);
-  text("Detail " + steps, 10, 55);
-  text("Sending Com data: " + bSendCOMData + " nCOMS: " + kinectData.getNumberCOMS(), 10, 70); 
-  text(msg, 10, 100);
+  text("Kinect ID " + K, 10, 25);
+  text("Local host " + oscP5.ip() + " " + oscP5.properties().listeningPort(), 10, 40);
+  text("Remote host " + remoteHost + " " + remotePort, 10, 55);
+  text("Detail " + steps, 10, 70);
+  text("Sending Com data: " + bSendCOMData + " nCOMS: " + kinectData.getNumberCOMS(), 10, 85); 
+  text("Sending Point Cloud: " + bSendOCData, 10, 100); 
+  text(msg, 10, 115);
   
   
 }

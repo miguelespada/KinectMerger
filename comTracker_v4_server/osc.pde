@@ -56,6 +56,20 @@ void sendDistances() {
 
 
 void oscEvent(OscMessage theOscMessage) {
+  if (theOscMessage.checkAddrPattern("/pc")==true) {
+    int k = theOscMessage.get(0).intValue();
+    int id = theOscMessage.get(1).intValue();
+    byte bytes[] = theOscMessage.get(2).bytesValue();
+    
+    for(int i = 0; i < bytes.length; i += 6){
+       PVector p = new PVector();
+       p.x = ((int)bytes[i + 1] << 8) | ((int)bytes[i] & 0xFF);
+       p.y = ((int)bytes[i + 3] << 8) | ((int)bytes[i + 2] & 0xFF);
+       p.z = ((int)bytes[i + 5] << 8) | ((int)bytes[i + 4] & 0xFF);
+       remotePC.add(p);
+    }
+  }
+  
   if (theOscMessage.checkAddrPattern("/ping")==true) {
     pushStyle();
     fill(0, 255, 0);
@@ -69,7 +83,7 @@ void oscEvent(OscMessage theOscMessage) {
     String s = theOscMessage.get(1).stringValue(); 
 
     String[] ss = s.split(",");
-    cms = new Vector<COM>();
+    cms.removeAllElements();
 
     for (int i = 0; i < ss.length; i++) {
       String[] tokens = ss[i].split(" ");

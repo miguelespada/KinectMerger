@@ -11,7 +11,7 @@ int[]   depthMap;
 int     steps   = 6;  
 String fileName = "";
 
-String matrixFile = "/Users/miguel/Desktop/aligment.mlp";
+String matrixFile = "/Users/miguel/Desktop/aa.mlp";
 
 color[]   userColors = { 
   color(255, 0, 0), color(0, 255, 0), color(0, 0, 255), color(255, 255, 0), color(255, 0, 255), color(0, 255, 255)
@@ -33,15 +33,16 @@ float[] M0, M1;
 boolean tracking = false;
 int frame; 
 
-void setup()
-{
-  frameRate(300);
+Vector<PVector> remotePC;
 
+void setup()
+  {
   size(1024, 768, P3D);  
   parseMatrix();
   context = new SimpleOpenNI(this);
   context.setMirror(false);
   cms = new Vector<COM>();
+  remotePC = new Vector<PVector>();
   if (context.enableDepth() == false)
   {
     println("Can't open the depthMap, maybe the camera is not connected!"); 
@@ -106,10 +107,10 @@ void draw()
   realWorldMap = context.depthMapRealWorld();
   userCount = context.getNumberOfUsers();
   userMap = null;
+ 
   if (userCount > 0)
-  {
-    userMap = context.getUsersPixels(SimpleOpenNI.USERS_ALL);
-  }
+   userMap = context.getUsersPixels(SimpleOpenNI.USERS_ALL);
+  
 
   for (int y=0;y < context.depthHeight();y+=steps)
   {
@@ -132,6 +133,18 @@ void draw()
       }
     }
   }
+  
+  pushMatrix();
+  applyMatrix(kinects[1].M);
+  stroke(255);
+  for(int i = 0; i < remotePC.size(); i ++){
+     PVector p = remotePC.get(i);
+     point(p.x, p.y, p.z); 
+  }  
+     
+  remotePC.removeAllElements();
+  popMatrix();
+  
   if (saving) {
     sendSave();
     fileName = "snapshot_" + frame + ".ply";
@@ -214,6 +227,7 @@ void draw()
 
   
   kinects[1].coms = cms;
+  cms.removeAllElements();
 
   if(frameCount % 30 == 0) 
     sendPing();

@@ -78,5 +78,23 @@ class COM {
       output.println(s);
     }
   }
+  
+  void toBytes(byte[] A){
+    int packectSize = 200;
+    int s = points.size() / packectSize;
+    int n = 0;
+    for(int i = 0; n < packectSize * 3 * 2; i += s){
+      PVector p = points.get(i);
+      short x = (short)(p.x);
+      short y = (short)(p.y);
+      short z = (short)(p.z);
+      A[n + 1] = (byte)((x >> 8) & 0xff);
+      A[n + 2] = (byte)(y & 0xff);
+      A[n + 3] = (byte)((y >> 8) & 0xff);
+      A[n + 4] = (byte)(z & 0xff);
+      A[n + 5] = (byte)((z >> 8) & 0xff);
+      n = n + 6;
+    }
+  }
 }
 
