@@ -94,7 +94,6 @@ void oscEvent(OscMessage theOscMessage) {
       cms.add(new COM(index, pos));
     }
 
-    return;
   }
 }
 

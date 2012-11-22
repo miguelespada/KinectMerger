@@ -11,7 +11,7 @@ int[]   depthMap;
 int     steps   = 6;  
 String fileName = "";
 
-String matrixFile = "/Users/miguel/Desktop/aa.mlp";
+String matrixFile = "/Users/miguel/Desktop/aligment.mlp";
 
 color[]   userColors = { 
   color(255, 0, 0), color(0, 255, 0), color(0, 0, 255), color(255, 255, 0), color(255, 0, 255), color(0, 255, 255)
@@ -133,17 +133,7 @@ void draw()
       }
     }
   }
-  
-  pushMatrix();
-  applyMatrix(kinects[1].M);
-  stroke(255);
-  for(int i = 0; i < remotePC.size(); i ++){
-     PVector p = remotePC.get(i);
-     point(p.x, p.y, p.z); 
-  }  
-     
-  remotePC.removeAllElements();
-  popMatrix();
+  drawRemotePointCloud();
   
   if (saving) {
     sendSave();
@@ -325,4 +315,16 @@ void keyPressed()
     break;
   }
 }
-
+void drawRemotePointCloud(){
+  
+  pushMatrix();
+  applyMatrix(kinects[1].M);
+  stroke(255);
+  for(int i = 0; i < remotePC.size(); i ++){
+     PVector p = remotePC.get(i);
+     point(p.x, p.y, p.z); 
+  }  
+  remotePC.removeAllElements();
+  popMatrix();
+  
+}
