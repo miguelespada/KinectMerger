@@ -1,4 +1,3 @@
-
 import SimpleOpenNI.*;
 SimpleOpenNI context;
 
@@ -10,7 +9,7 @@ int[]   depthMap;
 int userCount;
 int[] userMap;
 
-int K; //Kinect id
+int K; 
 int frame = 0;
 
 color[]   userColors = { 
@@ -33,6 +32,7 @@ boolean saving = false;
 
 PFont font; 
 String msg = "";
+
 void setup()
 {
   
@@ -46,7 +46,6 @@ void setup()
   bSendPCData =  loadSetting("SEND_PC_DATA", true);
   
   size(800, 600, P3D);
-  //context = new SimpleOpenNI(this,SimpleOpenNI.RUN_MODE_MULTI_THREADED);
   context = new SimpleOpenNI(this);
   context.setMirror(false);
 
@@ -65,8 +64,8 @@ void setup()
   10, 150000);
 
   setupOsc();
-  kinectData = new KinectData();
   
+  kinectData = new KinectData();
   
   font = loadFont("mono.vlw");
   textFont(font);
@@ -74,12 +73,13 @@ void setup()
 
 void draw()
 {
-  // update the cam
   context.update();
   background(0, 0, 0);
   depthMap = context.depthMap();
-  kinectData.resetState();
-  processRawData();
+  
+  processAndDrawRawData();
+  
+  context.drawCamFrustum();
   
   if(saving){
     String fileName = "snapshot_" + frame + ".ply";
@@ -88,14 +88,10 @@ void draw()
     saving = false;
   }
   
-  context.drawCamFrustum();
   
   if(frameRate % 30 == 0) sendPing(); 
-  
   if(bSendCOMData) sendCoMs();
-  
   if(bSendPCData) sendPCs();
-  
   
   textMode(SCREEN);
   fill(255);
@@ -108,8 +104,6 @@ void draw()
   text("Sending Com data: " + bSendCOMData + " nCOMS: " + kinectData.getNumberCOMS(), 10, 85); 
   text("Sending Point Cloud[k]: " + bSendPCData, 10, 100); 
   text(msg, 10, 115);
-  
-  
 }
 
 void keyPressed()
@@ -145,7 +139,7 @@ void keyPressed()
   }
 }
 
-void processRawData() {
+void processAndDrawRawData() {
 
   translate(width/2, height/2, 0);
   rotateX(rotX);
@@ -153,6 +147,7 @@ void processRawData() {
   scale(zoomF);
   translate(0, 0, -2000); 
 
+  kinectData.resetState();
   realWorldMap = context.depthMapRealWorld();
   userCount = context.getNumberOfUsers();
   userMap = null;
@@ -177,3 +172,4 @@ void processRawData() {
     }
   }
 }
+

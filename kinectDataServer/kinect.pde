@@ -40,7 +40,7 @@ class KinectData {
     output.println("property float z");
     output.println("property int userId");
     output.println("end_header");
-    for (COM c: coms)  c.saveFrame(output);
+    for (COM c: coms)  c.savePoints(output);
     output.close();
   }
 }
@@ -48,7 +48,6 @@ class KinectData {
 class COM {
   int id;
   PVector pos;
-  int n;
   Vector<PVector> points;
 
   COM(int id) {
@@ -56,8 +55,8 @@ class COM {
     pos = new PVector(0, 0, 0);
     points = new Vector<PVector>();
   }
+  
   void addPoint(PVector p) {
-    n += 1;
     pos.x += p.x;
     pos.y += p.y;
     pos.z += p.z;
@@ -65,19 +64,22 @@ class COM {
   } 
 
   PVector getCOM() {
+    int n = points.size();
     return new PVector(pos.x/n, pos.y/n, pos.z/n);
   }
 
   String toString() {
-    return "c " + id + " " + pos.x/n + " " + pos.y/n + " " + pos.z/n;
+    PVector com = getCom();
+    return "c " + id + " " + com.x + " " + com.y + " " + com.z;
   }
 
-  void saveFrame(PrintWriter output) {
+  void savePoints(PrintWriter output) {
     for (PVector p: points) {
       String s = p.x + " " + p.y + " " + p.z + " " + id;
       output.println(s);
     }
   }
+  
   boolean canSerializeMoreData(int packect) {
     return points.size() - (200 * packect) > 0;
   }

@@ -25,6 +25,7 @@ void sendPing() {
   println("Ping");
   oscP5.send(myMessage, myRemoteLocation);
 }
+
 void sendCoMs() {
   if ( kinectData.coms.size() > 0) {
     OscMessage myMessage = new OscMessage("/com");
