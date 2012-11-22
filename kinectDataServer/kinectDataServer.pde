@@ -1,3 +1,4 @@
+
 import SimpleOpenNI.*;
 SimpleOpenNI context;
 
@@ -66,6 +67,7 @@ void setup()
 
   setupOsc();
   kinectData = new KinectData();
+  if(frameCount % 30) println("FPS: " + frameRate);
 }
 
 void draw()
@@ -85,7 +87,10 @@ void draw()
   
   context.drawCamFrustum();
   
-  if(bSendCOMData) sendCoMs();
+  if(bSendCOMData) {
+    sendCoMs();
+    sendPing(); 
+  }
 }
 
 

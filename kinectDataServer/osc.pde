@@ -20,7 +20,11 @@ void oscEvent(OscMessage theOscMessage) {
   } 
   println("### received an osc message. with address pattern "+theOscMessage.addrPattern());
 }
+void sendPing(){
+  OscMessage myMessage = new OscMessage("/ping");
+  oscP5.send(myMessage, myRemoteLocation);
 
+}
 void sendCoMs() {
   if( kinectData.coms.size() > 0){
   OscMessage myMessage = new OscMessage("/com");
