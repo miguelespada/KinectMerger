@@ -13,7 +13,7 @@ class User {
     candidates = new Vector<COM>();
     this.com = new COM(-1);
     this.c = color(255);
-     calibCom = new COM(0, new PVector(0, 0, 0));
+    calibCom = new COM(0, new PVector(0, 0, 0));
   }
 
   User(COM com) {
@@ -22,7 +22,7 @@ class User {
     candidates = new Vector<COM>();
     calibCom = new COM(0, new PVector(0, 0, 0));
   }
-  
+
   void setColor(color c) {
     this.c = c;
   }
@@ -66,20 +66,20 @@ class User {
   float dist(User u) {
     return this.com.dist(u.com);
   }
-  
-  void setCalibrationPoint(COM c){
+
+  void setCalibrationPoint(COM c) {
     calibCom.pos.x = c.pos.x;
     calibCom.pos.y = c.pos.y;
     calibCom.pos.z = c.pos.z;
   }
-  void resetCalibrationPoint(){
+  void resetCalibrationPoint() {
     calibCom.pos.x = 0;
     calibCom.pos.y = 0;
     calibCom.pos.z = 0;
     reset();
   }
-  
-  void reset(){
+
+  void reset() {
     lerpedCom = null;
     this.com = calibCom;
   }

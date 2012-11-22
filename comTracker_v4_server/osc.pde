@@ -1,6 +1,6 @@
-
 import oscP5.*;
 import netP5.*;
+
 Vector<COM> cms;
 OscP5 oscP5;
 NetAddress pdLocation;
@@ -12,23 +12,22 @@ NetAddress iPhoneLocation2;
 
 void setupOsc() {
   oscP5 = new OscP5(this, 12000);
-  pdLocation = new NetAddress("169.254.0.1", 12000);
+  pdLocation = new NetAddress("169.254.0.1", 12001);
   myLocation = new NetAddress("169.254.0.2", 12000);
   serverLocation = new NetAddress("169.254.0.3", 12000);
-  iPhoneLocation0 = new NetAddress("169.254.0.4", 11000);
-  iPhoneLocation1 = new NetAddress("169.254.0.5", 11000);
-  iPhoneLocation2 = new NetAddress("169.254.0.6", 11000);
+  iPhoneLocation0 = new NetAddress("169.254.0.4", 12000);
+  iPhoneLocation1 = new NetAddress("169.254.0.5", 12000);
+  iPhoneLocation2 = new NetAddress("169.254.0.6", 12000);
 }
 
 void sendPing() {
-  println("/ping");
   OscMessage myMessage = new OscMessage("/ping");  
   oscP5.send(myMessage, pdLocation);
-  oscP5.send(myMessage, iPhoneLocation0);
+ /* oscP5.send(myMessage, iPhoneLocation0);
   oscP5.send(myMessage, iPhoneLocation1);
-  oscP5.send(myMessage, iPhoneLocation2);
+  oscP5.send(myMessage, iPhoneLocation2);*/
 }
-void sendSave(){
+void sendSave() {
   OscMessage myMessage = new OscMessage("/save");
   myMessage.add(frame); 
   oscP5.send(myMessage, serverLocation);
@@ -40,10 +39,10 @@ void sendDistances() {
   PVector v0 = users[0].lerpedCom;
   PVector v1 = users[1].lerpedCom;
   PVector v2 = users[2].lerpedCom;
-  
+
   text("Distances: " + int(v0.dist(v1)) + " " 
-                     + int(v1.dist(v2)) + " " 
-                     + int(v2.dist(v0)), 10, 85);
+    + int(v1.dist(v2)) + " " 
+    + int(v2.dist(v0)), 10, 150);
 
   myMessage.add(v0.dist(v1)); 
   myMessage.add(v1.dist(v2));
@@ -57,18 +56,17 @@ void sendDistances() {
 
 
 void oscEvent(OscMessage theOscMessage) {
- if (theOscMessage.checkAddrPattern("/ping")==true) {
-   pushStyle();
-   fill(0, 255, 0);
-   text("PING", 10, 120);
-   popStyle();
- }
- 
+  if (theOscMessage.checkAddrPattern("/ping")==true) {
+    pushStyle();
+    fill(0, 255, 0);
+    text("PING", 10, 135);
+    popStyle();
+  }
+
   if (theOscMessage.checkAddrPattern("/com")==true) {
 
     int k = theOscMessage.get(0).intValue();
     String s = theOscMessage.get(1).stringValue(); 
-   // println("Kineck " + k + " OSC CoM: " + s);
 
     String[] ss = s.split(",");
     cms = new Vector<COM>();
@@ -86,7 +84,4 @@ void oscEvent(OscMessage theOscMessage) {
   }
 }
 
-void updateCoMs() {
-  kinects[1].coms = cms;
-}
 

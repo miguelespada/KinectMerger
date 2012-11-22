@@ -4,11 +4,12 @@ import SimpleOpenNI.*;
 
 SimpleOpenNI context;
 float        zoomF =0.12f;
-float        rotX = 2;  // by default rotate the hole scene 180deg around the x-axis,                                   // the data from openni comes upside down
+float        rotX = 2;                                
 float        rotY = radians(0);
 PVector[] realWorldMap;
 int[]   depthMap;
-
+int     steps   = 6;  
+String fileName = "";
 
 String matrixFile = "/Users/miguel/Desktop/aligment.mlp";
 
@@ -52,7 +53,7 @@ void setup()
   context.enableScene();
 
   stroke(255, 255, 255);
-  
+
   perspective(radians(45), 
   float(width)/float(height), 
   10, 150000);
@@ -72,7 +73,7 @@ void setup()
     users[i] = new User();
     users[i].setColor(userCoMColors[i]);
   }
-  
+
   users[0].calibCom = new COM(0, new PVector(61, -250, 1820));
   users[1].calibCom = new COM(0, new PVector(-360, 346, 4140));
   users[2].calibCom = new COM(0, new PVector(1270, 297, 2853));
@@ -95,7 +96,6 @@ void draw()
   scale(zoomF);
 
   depthMap = context.depthMap();
-  int     steps   = 6;  
   int     index;
   PVector realWorldPoint;
 
@@ -132,9 +132,9 @@ void draw()
       }
     }
   }
-  if(saving){
+  if (saving) {
     sendSave();
-    String fileName = "snapshot_" + frame + ".ply";
+    fileName = "snapshot_" + frame + ".ply";
     kinects[0].saveFrame(fileName);
     frame ++;
   }
@@ -148,12 +148,12 @@ void draw()
     u.calibCom.draw(color(40, 200, 100), 30);
 
   popMatrix();
-  
-    
+
+
   kinects[0].drawCoM();
   kinects[1].drawCoM();
-  
-  
+
+
 
   if (tracking) {
     if (!calibrated) {
@@ -212,37 +212,39 @@ void draw()
     sendDistances();
   }
 
-  updateCoMs();
+  
+  kinects[1].coms = cms;
 
-  textMode(SCREEN);
-  fill(255);
-  if (frameCount % 30 == 0) {
+  if(frameCount % 30 == 0) 
     sendPing();
-    println("fps: "+ frameRate);
-  }
-  text("fps: "+ frameRate + "\n" +  
-    kinects[0].coms.size() + " local coms" + "\n" +
-    kinects[1].coms.size() + " remote coms" + "\n"   
-    , 10, 40);
+    
+  textMode(SCREEN);
+ text("FPS " + frameRate, 10, 10);
+  text("Local host " + oscP5.ip() + " " + oscP5.properties().listeningPort(), 10, 25);
+  text("Detail " + steps, 10, 40);
+  
   if (calibrated && tracking) {
     fill(0, 255, 0);
-    text("CALIBRATED [ON] TRACKING [ON] type 't' to turn ON/OFF the tracking", 10, 20);
+    text("CALIBRATED [ON] TRACKING [ON] type 't' to turn ON/OFF the tracking", 10, 55);
   }
   if (!tracking) {
     fill(255, 0, 0);
-    text("CALIBRATED [OFF] TRACKING [OFF] type 't' to turn ON/OFF the tracking", 10, 20);
+    text("CALIBRATED [OFF] TRACKING [OFF] type 't' to turn ON/OFF the tracking", 10, 55);
   }
   if (!calibrated && tracking) {
     fill(255, 255, 0);
-    text("CALIBRATED [OFF] TRACKING [ON] type 't' to turn ON/OFF the tracking", 10, 20);
+    text("CALIBRATED [OFF] TRACKING [ON] type 't' to turn ON/OFF the tracking", 10, 55);
   }
-  // sendTestDistances();
 
-
+  text( 
+    kinects[0].coms.size() + " <- local coms " + 
+    kinects[1].coms.size() + " <- remote coms "   
+    , 10, 70);
   text("Calibration Points [1/2/3]: " + users[0].calibCom.toString() + " " 
     + users[1].calibCom.toString() + " " 
     + users[2].calibCom.toString(), 10, 105);
   text("Saving: " + saving, 10, 125);
+  text("Saved: " + fileName, 10, 140);
 }
 
 
@@ -253,7 +255,7 @@ void keyPressed()
   case 's':
     saving = !saving;
     println("[SAVING: ] " + saving);
-    if(saving) frame = 0;
+    if (saving) frame = 0;
     break;
   case ' ':
     calibrated = false;

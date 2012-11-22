@@ -35,7 +35,7 @@ class COM {
   String toString() {
     return "c " + id + " " + pos.x/n + " " + pos.y/n + " " + pos.z/n;
   }
-  
+
   void saveFrame(PrintWriter output) {
     for (PVector p: points) {
       String s = p.x + " " + p.y + " " + p.z + " " + id;
@@ -64,12 +64,10 @@ class COM {
     pushMatrix();
     translate(p.x, p.y, p.z);
     stroke(255, 0, 0);
-    // sphere(5);
     this.pos =  new PVector(
     modelX(0, 0, 0), 
     modelY(0, 0, 0), 
     modelZ(0, 0, 0));
-    //println(this.pos);
     popMatrix();
   }
 
@@ -87,5 +85,4 @@ class COM {
     return p.dist(c.getCOM());
   }
 }
-
 

@@ -29,15 +29,15 @@ class KinectData {
   }
 
   void drawCoM() {
-    if(coms == null) return;
+    if (coms == null) return;
     for (COM c: coms)
       c.draw();
   }
   void calculateRealWorldCoordinates() {
-    if(coms == null) return;
+    if (coms == null) return;
     pushMatrix();
     applyMatrix(this.M);
-    
+
     for (COM c: coms)
       c.calculateRealWorldCoordinates();
     popMatrix();
@@ -54,8 +54,8 @@ class KinectData {
     return this.M;
   }
   void resetState() {
-      if(coms == null) return;
-      coms.removeAllElements();
+    if (coms == null) return;
+    coms.removeAllElements();
   }
 
   boolean calibrate() {
@@ -118,11 +118,11 @@ class KinectData {
       }
     }
   }
-  void setCalibrationPoint(int id){
+  void setCalibrationPoint(int id) {
     if (coms.size() ==1) 
       users[id].setCalibrationPoint(coms.get(0));
   }
-  
+
   void saveFrame(String fileName) {
     PrintWriter output;
     output = createWriter(fileName);
