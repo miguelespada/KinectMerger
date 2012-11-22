@@ -66,8 +66,9 @@ void oscEvent(OscMessage theOscMessage) {
  
   if (theOscMessage.checkAddrPattern("/com")==true) {
 
-    String s = theOscMessage.get(0).stringValue(); 
-    //println("OSC CoM: " + s);
+    int k = theOscMessage.get(0).intValue();
+    String s = theOscMessage.get(1).stringValue(); 
+   // println("Kineck " + k + " OSC CoM: " + s);
 
     String[] ss = s.split(",");
     cms = new Vector<COM>();

@@ -1,0 +1,22 @@
+<!DOCTYPE MeshLabDocument>
+<MeshLabProject>
+ <MeshGroup>
+  <MLMesh label="a0.obj" filename="Documents/Processing/SOPI/PointCloud_snapshot_osc/a0.obj">
+   <MLMatrix44>
+1 0 0 0 
+0 1 0 0 
+0 0 1 0 
+0 0 0 1 
+</MLMatrix44>
+  </MLMesh>
+  <MLMesh label="b0.obj" filename="Documents/Processing/SOPI/PointCloud_snapshot_osc/b0.obj">
+   <MLMatrix44>
+0.584885 -0.322672 -0.744172 2391.65 
+0.289421 0.940096 -0.180153 491.139 
+0.757724 -0.11001 0.643236 1140.03 
+0 0 0 1 
+</MLMatrix44>
+  </MLMesh>
+ </MeshGroup>
+ <RasterGroup/>
+</MeshLabProject>

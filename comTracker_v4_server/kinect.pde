@@ -29,12 +29,15 @@ class KinectData {
   }
 
   void drawCoM() {
+    if(coms == null) return;
     for (COM c: coms)
       c.draw();
   }
   void calculateRealWorldCoordinates() {
+    if(coms == null) return;
     pushMatrix();
     applyMatrix(this.M);
+    
     for (COM c: coms)
       c.calculateRealWorldCoordinates();
     popMatrix();
@@ -51,7 +54,8 @@ class KinectData {
     return this.M;
   }
   void resetState() {
-    coms.removeAllElements();
+      if(coms == null) return;
+      coms.removeAllElements();
   }
 
   boolean calibrate() {

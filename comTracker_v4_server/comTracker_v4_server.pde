@@ -10,7 +10,7 @@ PVector[] realWorldMap;
 int[]   depthMap;
 
 
-String matrixFile = "/Users/miguel/Desktop/aligment3.mlp";
+String matrixFile = "/Users/miguel/Desktop/aligment.mlp";
 
 color[]   userColors = { 
   color(255, 0, 0), color(0, 255, 0), color(0, 0, 255), color(255, 255, 0), color(255, 0, 255), color(0, 255, 255)
@@ -40,7 +40,7 @@ void setup()
   parseMatrix();
   context = new SimpleOpenNI(this);
   context.setMirror(false);
-
+  cms = new Vector<COM>();
   if (context.enableDepth() == false)
   {
     println("Can't open the depthMap, maybe the camera is not connected!"); 
@@ -133,9 +133,9 @@ void draw()
     }
   }
   if(saving){
-    sendSaving();
+    sendSave();
     String fileName = "snapshot_" + frame + ".ply";
-    kinect[0].saveFrame(fileName);
+    kinects[0].saveFrame(fileName);
     frame ++;
   }
   kinects[0].setCoM();
@@ -221,8 +221,8 @@ void draw()
     println("fps: "+ frameRate);
   }
   text("fps: "+ frameRate + "\n" +  
-    kinects[0].coms.size() + " local coms" + "\n"  
-    + kinects[1].coms.size() + " remote coms" + "\n" 
+    kinects[0].coms.size() + " local coms" + "\n" +
+    kinects[1].coms.size() + " remote coms" + "\n"   
     , 10, 40);
   if (calibrated && tracking) {
     fill(0, 255, 0);

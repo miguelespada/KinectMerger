@@ -12,33 +12,33 @@ void setupOsc() {
 }
 
 void oscEvent(OscMessage theOscMessage) {
-  
-  if(theOscMessage.checkAddrPattern("/save")==true) {
-     frame = theOscMessage.get(0).intValue();  
-      saving = true;
-      return;
+
+  if (theOscMessage.checkAddrPattern("/save")==true) {
+    frame = theOscMessage.get(0).intValue();  
+    saving = true;
+    return;
   } 
   println("### received an osc message. with address pattern "+theOscMessage.addrPattern());
 }
-void sendPing(){
+void sendPing() {
   OscMessage myMessage = new OscMessage("/ping");
+  println("Ping");
   oscP5.send(myMessage, myRemoteLocation);
-
 }
 void sendCoMs() {
-  if( kinectData.coms.size() > 0){
-  OscMessage myMessage = new OscMessage("/com");
-  
-  myMessage.add(K);
+  if ( kinectData.coms.size() > 0) {
+    OscMessage myMessage = new OscMessage("/com");
 
-  String s = "";
-  for (COM c: kinectData.coms) {
-    s += c.toString();
-    s += ",";
-  }
-  myMessage.add(s);
-  oscP5.send(myMessage, myRemoteLocation);
+    myMessage.add(K);
+
+    String s = "";
+    for (COM c: kinectData.coms) {
+      s += c.toString();
+      s += ",";
+    }
+
+    myMessage.add(s);
+    oscP5.send(myMessage, myRemoteLocation);
   }
 }
-
 

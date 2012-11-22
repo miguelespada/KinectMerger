@@ -38,8 +38,8 @@ void setup()
   
   println("I'm kinect id: " + K);
   remoteHost = loadSetting("REMOTE_HOST", "localhost");
-  localPort = loadSetting("LOCAL_PORT", 9000);
-  remotePort = loadSetting("REMOTE_PORT", 7000);
+  localPort = loadSetting("LOCAL_PORT", 12000);
+  remotePort = loadSetting("REMOTE_PORT", 12000);
   steps = loadSetting("STEPS", 10);
   bSendCOMData =  loadSetting("SEND_COM_DATA", true);
  
@@ -67,7 +67,7 @@ void setup()
 
   setupOsc();
   kinectData = new KinectData();
-  if(frameCount % 30) println("FPS: " + frameRate);
+  if(frameCount % 30 == 0) println("FPS: " + frameRate);
 }
 
 void draw()
@@ -89,7 +89,7 @@ void draw()
   
   if(bSendCOMData) {
     sendCoMs();
-    sendPing(); 
+    if(frameRate % 30 == 0) sendPing(); 
   }
 }
 
