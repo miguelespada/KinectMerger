@@ -20,7 +20,7 @@ class KinectData {
       coms.add(c);
     }
   }
-  int getNumberCOMS(){
+  int getNumberCOMS() {
     return coms.size();
   }
   void resetState() {
@@ -78,22 +78,23 @@ class COM {
       output.println(s);
     }
   }
-  
-  void toBytes(byte[] A){
-    int packectSize = 200;
-    int s = points.size() / packectSize;
+  boolean canSerializeMoreData(int packect) {
+    return points.size() - (200 * packect) > 0;
+  }
+  void serializeToBytes(byte[] A, int packect) {
     int n = 0;
-    for(int i = 0; n < packectSize * 3 * 2; i += s){
+    for (int i = 200 * packect; i < 200; i += 1, n += 6) {
+      if (i >= points.size()) break;
       PVector p = points.get(i);
       short x = (short)(p.x);
       short y = (short)(p.y);
       short z = (short)(p.z);
+      A[n    ] = (byte)(x & 0xff);
       A[n + 1] = (byte)((x >> 8) & 0xff);
       A[n + 2] = (byte)(y & 0xff);
       A[n + 3] = (byte)((y >> 8) & 0xff);
       A[n + 4] = (byte)(z & 0xff);
       A[n + 5] = (byte)((z >> 8) & 0xff);
-      n = n + 6;
     }
   }
 }

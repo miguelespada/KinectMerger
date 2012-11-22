@@ -104,17 +104,19 @@ void draw()
   text("Kinect ID " + K, 10, 25);
   text("Local host " + oscP5.ip() + " " + oscP5.properties().listeningPort(), 10, 40);
   text("Remote host " + remoteHost + " " + remotePort, 10, 55);
-  text("Detail " + steps, 10, 70);
+  text("Detail  [a/q]" + steps, 10, 70);
   text("Sending Com data: " + bSendCOMData + " nCOMS: " + kinectData.getNumberCOMS(), 10, 85); 
-  text("Sending Point Cloud: " + bSendOCData, 10, 100); 
+  text("Sending Point Cloud[k]: " + bSendPCData, 10, 100); 
   text(msg, 10, 115);
   
   
 }
 
-
 void keyPressed()
 {
+  if(key == 'k') bSendPCData = !bSendPCData;
+  if(key == 'q') steps += 1;
+  if(key == 'a') steps -= 1;
   switch(keyCode)
   {
   case LEFT:
