@@ -30,6 +30,9 @@ int remotePort, localPort;
 boolean bSendCOMData;
 
 boolean saving = false;
+
+PFont font; 
+String msg = "";
 void setup()
 {
   
@@ -40,7 +43,7 @@ void setup()
   remoteHost = loadSetting("REMOTE_HOST", "localhost");
   localPort = loadSetting("LOCAL_PORT", 12000);
   remotePort = loadSetting("REMOTE_PORT", 12000);
-  steps = loadSetting("STEPS", 10);
+  steps = loadSetting("STEPS", 6);
   bSendCOMData =  loadSetting("SEND_COM_DATA", true);
  
   if(bSendCOMData) println("Sending COM data [Yes]");
@@ -67,7 +70,10 @@ void setup()
 
   setupOsc();
   kinectData = new KinectData();
-  if(frameCount % 30 == 0) println("FPS: " + frameRate);
+  
+  
+  font = loadFont("mono.vlw");
+  textFont(font);
 }
 
 void draw()
@@ -82,6 +88,7 @@ void draw()
   if(saving){
     String fileName = "snapshot_" + frame + ".ply";
     kinectData.saveFrame(fileName);
+    msg = "Saved " + fileName;
     saving = false;
   }
   
@@ -91,6 +98,18 @@ void draw()
     sendCoMs();
     if(frameRate % 30 == 0) sendPing(); 
   }
+  textMode(SCREEN);
+  fill(255);
+  textSize(12);
+  text("FPS " + frameRate, 10, 10);
+  text("Kinect ID " + K, 10, 10);
+  text("Local host " + oscP5.ip() + " " + oscP5.properties().listeningPort(), 10, 25);
+  text("Remote host " + remoteHost + " " + remotePort, 10, 40);
+  text("Detail " + steps, 10, 55);
+  text("Sending Com data: " + bSendCOMData + " nCOMS: " + kinectData.getNumberCOMS(), 10, 70); 
+  text(msg, 10, 100);
+  
+  
 }
 
 

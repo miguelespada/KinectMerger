@@ -20,7 +20,9 @@ class KinectData {
       coms.add(c);
     }
   }
-
+  int getNumberCOMS(){
+    return coms.size();
+  }
   void resetState() {
     coms.removeAllElements();
   }
