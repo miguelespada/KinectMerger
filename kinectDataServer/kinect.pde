@@ -83,6 +83,7 @@ class COM {
   boolean canSerializeMoreData(int packect) {
     return points.size() - (200 * packect) > 0;
   }
+  
   void serializeToBytes(byte[] A, int packect) {
     int n = 0;
     for (int i = 200 * packect; i < 200; i += 1, n += 6) {

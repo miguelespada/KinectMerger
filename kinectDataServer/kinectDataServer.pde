@@ -109,8 +109,14 @@ void draw()
 void keyPressed()
 {
   if(key == 'k') bSendPCData = !bSendPCData;
-  if(key == 'q') steps += 1;
-  if(key == 'a') steps -= 1;
+  if(key == 'q') {
+    steps += 1;
+    saveSetting("STEP", step);
+  }
+  if(key == 'a') {
+    steps -= 1;
+    saveSetting("STEP", step);
+  }
   switch(keyCode)
   {
   case LEFT:

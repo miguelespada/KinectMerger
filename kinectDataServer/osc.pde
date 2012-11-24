@@ -8,7 +8,6 @@ NetAddress myRemoteLocation;
 void setupOsc() {
   oscP5 = new OscP5(this, localPort);
   myRemoteLocation = new NetAddress(remoteHost, remotePort);
-  println("Conntect to: " + remoteHost + " port: " + remotePort);
 }
 
 void oscEvent(OscMessage theOscMessage) {
@@ -18,11 +17,9 @@ void oscEvent(OscMessage theOscMessage) {
     saving = true;
     return;
   } 
-  println("### received an osc message. with address pattern "+theOscMessage.addrPattern());
 }
 void sendPing() {
   OscMessage myMessage = new OscMessage("/ping");
-  println("Ping");
   oscP5.send(myMessage, myRemoteLocation);
 }
 
@@ -47,6 +44,7 @@ void sendPCs() {
   byte[] bytes = new byte[1200];
   for (COM c: kinectData.coms) {
     int packect = 0;
+    
     while(c.canSerializeMoreData(packect)){
       OscMessage myMessage = new OscMessage("/pc");
       myMessage.add(K);
