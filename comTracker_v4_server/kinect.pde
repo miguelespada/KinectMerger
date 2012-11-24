@@ -30,16 +30,17 @@ class KinectData {
 
   void drawCoM() {
     if (coms == null) return;
-    for (COM c: coms)
-      c.draw();
+    for(int i = 0; i < coms.size(); i++)
+      coms.get(i).draw();
   }
   void calculateRealWorldCoordinates() {
     if (coms == null) return;
     pushMatrix();
     applyMatrix(this.M);
 
-    for (COM c: coms)
-      c.calculateRealWorldCoordinates();
+    for(int i = 0; i < coms.size(); i++)
+      coms.get(i).calculateRealWorldCoordinates();
+   
     popMatrix();
   }
   void setCoM() { 

@@ -73,7 +73,7 @@ class COM {
 
 
   void draw() {
-    this.draw(color(255), 5);
+    this.draw(color(0), 5);
   }
 
   float dist(User u) {

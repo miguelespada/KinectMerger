@@ -12,13 +12,13 @@ class User {
   User() {
     candidates = new Vector<COM>();
     this.com = new COM(-1);
-    this.c = color(255);
+    this.c = color(0);
     calibCom = new COM(0, new PVector(0, 0, 0));
   }
 
   User(COM com) {
     this.com = com;
-    this.c = color(255);
+    this.c = color(0);
     candidates = new Vector<COM>();
     calibCom = new COM(0, new PVector(0, 0, 0));
   }

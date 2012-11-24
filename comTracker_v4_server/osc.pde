@@ -32,6 +32,23 @@ void sendSave() {
   myMessage.add(frame); 
   oscP5.send(myMessage, serverLocation);
 }
+void sendPositions(){
+  OscMessage myMessage = new OscMessage("/positions");
+  PVector v0 = users[0].com.pos;
+  PVector v1 = users[1].com.pos;
+  PVector v2 = users[2].com.pos;
+  
+  myMessage.add(v0.x); 
+  myMessage.add(v0.y); 
+  
+  myMessage.add(v1.x); 
+  myMessage.add(v1.y); 
+  
+  myMessage.add(v2.x); 
+  myMessage.add(v2.y); 
+  
+  oscP5.send(myMessage, pdLocation); 
+}
 
 void sendDistances() {
   OscMessage myMessage = new OscMessage("/distances");
@@ -39,19 +56,12 @@ void sendDistances() {
   PVector v0 = users[0].lerpedCom;
   PVector v1 = users[1].lerpedCom;
   PVector v2 = users[2].lerpedCom;
-
-  text("Distances: " + int(v0.dist(v1)) + " " 
-    + int(v1.dist(v2)) + " " 
-    + int(v2.dist(v0)), 10, 150);
-
+  
   myMessage.add(v0.dist(v1)); 
   myMessage.add(v1.dist(v2));
   myMessage.add(v2.dist(v0)); 
 
   oscP5.send(myMessage, pdLocation);
-  oscP5.send(myMessage, iPhoneLocation0);
-  oscP5.send(myMessage, iPhoneLocation1);
-  oscP5.send(myMessage, iPhoneLocation2);
 }
 
 

@@ -1,0 +1,22 @@
+<!DOCTYPE MeshLabDocument>
+<MeshLabProject>
+ <MeshGroup>
+  <MLMesh label="k0.ply" filename="k0.ply">
+   <MLMatrix44>
+1 0 0 0 
+0 1 0 0 
+0 0 1 0 
+0 0 0 1 
+</MLMatrix44>
+  </MLMesh>
+  <MLMesh label="k1.ply" filename="k1.ply">
+   <MLMatrix44>
+0.442349 0.250615 0.861115 -2962.27 
+-0.308699 0.944039 -0.116172 299.019 
+-0.842041 -0.214437 0.494959 1469.58 
+0 0 0 1 
+</MLMatrix44>
+  </MLMesh>
+ </MeshGroup>
+ <RasterGroup/>
+</MeshLabProject>

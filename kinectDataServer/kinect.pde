@@ -69,7 +69,7 @@ class COM {
   }
 
   String toString() {
-    PVector com = getCom();
+    PVector com = getCOM();
     return "c " + id + " " + com.x + " " + com.y + " " + com.z;
   }
 

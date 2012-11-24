@@ -11,14 +11,14 @@ int[]   depthMap;
 int     steps   = 6;  
 String fileName = "";
 
-String matrixFile = "/Users/miguel/Desktop/aligment.mlp";
-
+String matrixFile = "/Users/miguel/Desktop/aligment2.mlp";
 color[]   userColors = { 
   color(255, 0, 0), color(0, 255, 0), color(0, 0, 255), color(255, 255, 0), color(255, 0, 255), color(0, 255, 255)
 };
 color[]  userCoMColors = { 
   color(255, 100, 100), color(100, 255, 100), color(100, 100, 255), color(255, 255, 100), color(255, 100, 255), color(100, 255, 255)
 };
+color[] colors = {color(255, 187, 0), color(42, 29, 255)};
 
 int userCount;
 int[] userMap;
@@ -53,7 +53,7 @@ void setup()
 
   context.enableScene();
 
-  stroke(255, 255, 255);
+  stroke(255);
 
   perspective(radians(45), 
   float(width)/float(height), 
@@ -85,7 +85,7 @@ void draw()
   // update the cam
   context.update();
 
-  background(0, 0, 0);
+  background(255);
 
 
   pushMatrix();
@@ -102,7 +102,8 @@ void draw()
 
   translate(0, 0, -2000); 
 
-  stroke(255);
+  stroke(50);
+  strokeWeight(2);
 
   realWorldMap = context.depthMapRealWorld();
   userCount = context.getNumberOfUsers();
@@ -126,7 +127,8 @@ void draw()
         if (userMap != null && userMap[index] != 0)
         {  // calc the user color
           int colorIndex = userMap[index] % userColors.length;
-          stroke(userColors[colorIndex]); 
+          //stroke(userColors[colorIndex]); 
+          stroke(colors[0]);
           point(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
           kinects[0].addPoint(colorIndex, realWorldPoint);
         }
@@ -148,11 +150,11 @@ void draw()
 
   context.drawCamFrustum();
   for (User u: users)
-    u.calibCom.draw(color(40, 200, 100), 30);
+    u.calibCom.draw(color(0), 30);
 
   popMatrix();
 
-
+  
   kinects[0].drawCoM();
   kinects[1].drawCoM();
 
@@ -213,11 +215,11 @@ void draw()
 
     popStyle();
     sendDistances();
+    sendPositions();
   }
 
   
   kinects[1].coms = cms;
-  cms.removeAllElements();
 
   if(frameCount % 30 == 0) 
     sendPing();
@@ -249,6 +251,12 @@ void draw()
     + users[2].calibCom.toString(), 10, 105);
   text("Saving: " + saving, 10, 125);
   text("Saved: " + fileName, 10, 140);
+  if(kinects[0].coms.size() > 0){    
+
+    PVector c = kinects[0].coms.get(0).pos;
+    text(int(c.x) + "  " + int(c.y) + "  " + int(c.z), 10, 155);
+  }
+  cms.removeAllElements();
 }
 
 
@@ -319,7 +327,7 @@ void drawRemotePointCloud(){
   
   pushMatrix();
   applyMatrix(kinects[1].M);
-  stroke(255);
+  stroke(colors[1]);
   for(int i = 0; i < remotePC.size(); i ++){
      PVector p = remotePC.get(i);
      point(p.x, p.y, p.z); 
