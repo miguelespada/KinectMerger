@@ -60,6 +60,26 @@ void draw()
     }
   }
   if (saveFrame) {
+    String str = "";
+    int n = 0;
+    for (int y=0;y < context.depthHeight();y+=1)
+    {
+      for (int x=0;x < context.depthWidth();x+=1)
+      {
+        int index = x + y * context.depthWidth();
+        PVector realWorldPoint = context.depthMapRealWorld()[index];
+        if(realWorldPoint.z > 0){
+          point(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
+          String s = realWorldPoint.x + " " 
+           + realWorldPoint.y + " " + 
+           realWorldPoint.z;
+          str += s;
+          str += "\n";
+          n += 1;
+        }
+      }
+    }
+    
     saveFrame = false;
     String fileName = "snapshot.ply";
     PrintWriter output;
@@ -67,26 +87,17 @@ void draw()
     output.println("ply");
     output.println("format ascii 1.0");
     output.println("comment : created from Kinect user tracker");
-    int n = context.depthHeight() * context.depthWidth();
     output.println("element vertex "+ n);
+    
     output.println("property float x");
     output.println("property float y");
     output.println("property float z");
     output.println("end_header");
-    for (int y=0;y < context.depthHeight();y+=1)
-    {
-      for (int x=0;x < context.depthWidth();x+=1)
-      {
-        int index = x + y * context.depthWidth();
-        PVector realWorldPoint = context.depthMapRealWorld()[index];
-        point(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
-        String s = realWorldPoint.x + " " 
-         + realWorldPoint.y + " " +realWorldPoint.z;
-        output.println(s);
-      }
-    }
-    
+    output.println(str);
     output.close();
+    
+   
+    
   }
   context.drawCamFrustum();
 }
@@ -124,4 +135,3 @@ void keyPressed()
     break;
   }
 }
-
