@@ -1,3 +1,17 @@
+void setupKinect(){
+  context = new SimpleOpenNI(this);
+  
+  // enable depthMap generation 
+  if (context.enableDepth() == false)
+  {
+    println("Can't open the depthMap, maybe the camera is not connected!"); 
+    exit();
+    return;
+  }
+  context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
+  context.enableScene();
+}
+
 class KinectData {
   Vector<COM> coms;
 

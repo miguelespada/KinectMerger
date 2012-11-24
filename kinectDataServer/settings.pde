@@ -21,6 +21,10 @@ void saveSetting(String id, String value){
   settings.put(id, value);
   saveSettings();
 }
+void saveSetting(String id, int value){
+  settings.put(id, (new Integer(value)).toString());
+  saveSettings();
+}
 
 void loadSettings(){
   String[] list = loadStrings(settingsFile);

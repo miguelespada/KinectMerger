@@ -10,7 +10,7 @@ int userCount;
 int[] userMap;
 
 int K; 
-int frame = 0;
+int frame = 0, maxFrame = 0;
 
 color[]   userColors = { 
   color(255, 0, 0), 
@@ -26,7 +26,8 @@ KinectData kinectData;
 
 String remoteHost;
 int remotePort, localPort;
-boolean bSendCOMData, bSendPCData;
+String folder;
+boolean bSendCOMData, bSendPCData, bOnline;
 
 boolean saving = false;
 
@@ -35,7 +36,7 @@ String msg = "";
 
 void setup()
 {
-  
+
   loadSettings();
   K = loadSetting("KINECT_ID", 0);
   remoteHost = loadSetting("REMOTE_HOST", "localhost");
@@ -44,63 +45,86 @@ void setup()
   steps = loadSetting("STEPS", 6);
   bSendCOMData =  loadSetting("SEND_COM_DATA", true);
   bSendPCData =  loadSetting("SEND_PC_DATA", true);
-  
-  size(800, 600, P3D);
-  context = new SimpleOpenNI(this);
-  context.setMirror(false);
+  bOnline =  loadSetting("ONLINE", true);
+  folder =  loadSetting("FOLDER", "");
+  maxFrame =  loadSetting("N_FRAMES", 0);
 
-  // enable depthMap generation 
-  if (context.enableDepth() == false)
-  {
-    println("Can't open the depthMap, maybe the camera is not connected!"); 
-    exit();
-    return;
-  }
-  context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
-  context.enableScene();
+  size(800, 600, P3D);
+
+  if (bOnline)
+    setupKinect();
+  else
+    frameRate(15);
 
   perspective(radians(45), 
   float(width)/float(height), 
   10, 150000);
 
   setupOsc();
-  
+
   kinectData = new KinectData();
-  
+
   font = loadFont("mono.vlw");
   textFont(font);
 }
 
 void draw()
 {
-  context.update();
   background(0, 0, 0);
-  depthMap = context.depthMap();
+
+  translate(width/2, height/2, 0);
+  rotateX(rotX);
+  rotateY(rotY);
+  scale(zoomF);
+  translate(0, 0, -2000);
   
-  processAndDrawRawData();
-  
-  context.drawCamFrustum();
-  
-  if(saving){
-    String fileName = "snapshot_" + frame + ".ply";
-    kinectData.saveFrame(fileName);
-    msg = "Saved " + fileName;
-    saving = false;
+  kinectData.resetState();
+  if (bOnline) {
+    context.update();
+    depthMap = context.depthMap();
+
+    processAndDrawRawData();
+
+    context.drawCamFrustum();
+
+    if (saving) {
+      String fileName = "snapshot_" + frame + ".ply";
+      kinectData.saveFrame(fileName);
+      msg = "Saved " + fileName;
+      saving = false;
+    }
   }
-  
-  
-  if(frameRate % 30 == 0) sendPing(); 
-  if(bSendCOMData) sendCoMs();
-  if(bSendPCData) sendPCs();
-  
+  else {
+    String fileName = folder + frame + ".ply";
+    try{
+      BufferedReader reader = createReader(fileName);    
+      frame = (frame + 1) % maxFrame;
+      if(reader != null){
+        processAndDrawFileData(reader);
+        reader.close();
+      }
+    } 
+    catch (IOException e) {
+      println(fileName + " do not exist");
+    }
+  }
+
+  if (frameRate % 30 == 0) sendPing(); 
+  if (bSendCOMData) sendCoMs();
+  if (bSendPCData) sendPCs();
+
   textMode(SCREEN);
   fill(255);
   textSize(12);
-  text("FPS " + frameRate, 10, 10);
-  text("Kinect ID " + K, 10, 25);
+  text("[ONLINE] "+ bOnline + " FPS " + frameRate, 10, 10);
+  if (online)
+    text("Kinect ID " + K, 10, 25);
+  else
+    text("folder" + folder + " " + frame + "/" + maxFrame, 10, 25);
+
   text("Local host " + oscP5.ip() + " " + oscP5.properties().listeningPort(), 10, 40);
   text("Remote host " + remoteHost + " " + remotePort, 10, 55);
-  text("Detail  [a/q]" + steps, 10, 70);
+  text("Detail  [a/q] " + steps, 10, 70);
   text("Sending Com data: " + bSendCOMData + " nCOMS: " + kinectData.getNumberCOMS(), 10, 85); 
   text("Sending Point Cloud[k]: " + bSendPCData, 10, 100); 
   text(msg, 10, 115);
@@ -108,14 +132,14 @@ void draw()
 
 void keyPressed()
 {
-  if(key == 'k') bSendPCData = !bSendPCData;
-  if(key == 'q') {
+  if (key == 'k') bSendPCData = !bSendPCData;
+  if (key == 'q') {
     steps += 1;
-    saveSetting("STEP", step);
+    saveSetting("STEP", steps);
   }
-  if(key == 'a') {
+  if (key == 'a') {
     steps -= 1;
-    saveSetting("STEP", step);
+    saveSetting("STEP", steps);
   }
   switch(keyCode)
   {
@@ -146,14 +170,8 @@ void keyPressed()
 }
 
 void processAndDrawRawData() {
+ 
 
-  translate(width/2, height/2, 0);
-  rotateX(rotX);
-  rotateY(rotY);
-  scale(zoomF);
-  translate(0, 0, -2000); 
-
-  kinectData.resetState();
   realWorldMap = context.depthMapRealWorld();
   userCount = context.getNumberOfUsers();
   userMap = null;
@@ -176,6 +194,41 @@ void processAndDrawRawData() {
         }
       }
     }
+  }
+}
+void processAndDrawFileData(BufferedReader reader) {
+  String line = null;
+  try {
+      line = reader.readLine();
+    } 
+    catch (IOException e) {
+      println(line);
+  }
+  while (!line.equals ("end_header")) {
+    try {
+      line = reader.readLine();
+    } 
+    catch (IOException e) {
+    }
+  }
+  while (line !=null) {
+    try {
+      line = reader.readLine();
+    } 
+    catch (IOException e) {
+      line = null;
+      
+    }
+    if(line == null) break;
+    String[] pieces = split(line, " ");
+    PVector p = new PVector(float(pieces[0]), 
+    float(pieces[1]), 
+    float(pieces[2]));
+
+    int idx = int(pieces[3]);
+    stroke(userColors[idx]); 
+    kinectData.addPoint(idx, p);
+    point(p.x, p.y, p.z);
   }
 }
 
