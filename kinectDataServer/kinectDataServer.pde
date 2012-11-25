@@ -188,8 +188,8 @@ void processAndDrawRawData() {
       { 
         PVector realWorldPoint = context.depthMapRealWorld()[index];
         if (userMap != null && userMap[index] != 0) {
-          int userIndex = userMap[index] % userColors.length;
-          stroke(userColors[userIndex]); 
+          int userIndex = userMap[index];
+          stroke(userColors[userIndex % userColors.length]); 
           point(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
           kinectData.addPoint(userIndex, realWorldPoint);
         }
@@ -223,11 +223,10 @@ void processAndDrawFileData(BufferedReader reader) {
     if(line == null) break;
     String[] pieces = split(line, " ");
     PVector p = new PVector(float(pieces[0]), 
-    float(pieces[1]), 
-    float(pieces[2]));
-
+                float(pieces[1]), 
+                float(pieces[2]));
     int idx = int(pieces[3]);
-    stroke(userColors[idx]); 
+    stroke(userColors[idx % userColors.length]); 
     kinectData.addPoint(idx, p);
     point(p.x, p.y, p.z);
   }

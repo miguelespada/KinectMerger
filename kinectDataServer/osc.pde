@@ -36,7 +36,6 @@ void sendCoMs() {
     }
 
     myMessage.add(s);
-    println(s);
     myMessage.add(frameCount);
     oscP5.send(myMessage, myRemoteLocation);
   }
