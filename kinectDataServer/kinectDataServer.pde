@@ -108,7 +108,9 @@ void draw()
       println(fileName + " do not exist");
     }
   }
-
+  
+  kinectData.drawCoM();
+  
   if (frameRate % 30 == 0) sendPing(); 
   if (bSendCOMData) sendCoMs();
   if (bSendPCData) sendPCs();
@@ -117,22 +119,21 @@ void draw()
   fill(255);
   textSize(12);
   text("[ONLINE] "+ bOnline + " FPS " + frameRate, 10, 10);
-  if (online)
-    text("Kinect ID " + K, 10, 25);
-  else
-    text("folder" + folder + " " + frame + "/" + maxFrame, 10, 25);
-
-  text("Local host " + oscP5.ip() + " " + oscP5.properties().listeningPort(), 10, 40);
-  text("Remote host " + remoteHost + " " + remotePort, 10, 55);
-  text("Detail  [a/q] " + steps, 10, 70);
-  text("Sending Com data: " + bSendCOMData + " nCOMS: " + kinectData.getNumberCOMS(), 10, 85); 
-  text("Sending Point Cloud[k]: " + bSendPCData, 10, 100); 
-  text(msg, 10, 115);
+  text("Kinect ID " + K, 10, 25);
+  if(!bOnline)
+    text("folder" + folder + "" + frame + "/" + maxFrame, 10, 40);
+  text("Local host " + oscP5.ip() + " " + oscP5.properties().listeningPort(), 10, 55);
+  text("Remote host " + remoteHost + " " + remotePort, 10, 70);
+  text("Detail  [a/q] " + steps, 10, 85);
+  text("Sending Com data [c]: " + bSendCOMData + " nCOMS: " + kinectData.getNumberCOMS(), 10, 100); 
+  text("Sending Point Cloud [k]: " + bSendPCData, 10, 115); 
+  text(msg, 10, 130);
 }
 
 void keyPressed()
 {
   if (key == 'k') bSendPCData = !bSendPCData;
+  if (key == 'c') bSendCOMData = !bSendCOMData;
   if (key == 'q') {
     steps += 1;
     saveSetting("STEP", steps);

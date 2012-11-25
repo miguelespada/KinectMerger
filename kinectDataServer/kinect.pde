@@ -18,6 +18,10 @@ class KinectData {
   KinectData() {
     coms = new Vector<COM>();
   }
+ void drawCoM() {
+   for (COM c: coms)
+      c.draw();
+  }
 
   void addPoint(int id, PVector p) {
     boolean added = false;
@@ -83,9 +87,10 @@ class COM {
   }
 
   String toString() {
-    PVector com = getCOM();
-    return "c " + id + " " + com.x + " " + com.y + " " + com.z;
+    PVector p = getCOM();
+    return "c " + id + " " + p.x + " " + p.y + " " + p.z;
   }
+ 
 
   void savePoints(PrintWriter output) {
     for (PVector p: points) {
@@ -93,16 +98,28 @@ class COM {
       output.println(s);
     }
   }
-  
-  boolean canSerializeMoreData(int packect) {
-    return points.size() - (200 * packect) > 0;
+   void draw() {
+    PVector p = getCOM();
+
+    pushMatrix();
+    pushStyle();
+    stroke(255);
+    fill(255);
+    translate(p.x, p.y, p.z);
+    ellipse(0, 0, 10, 10);
+    popStyle();
+    popMatrix();
   }
   
-  void serializeToBytes(byte[] A, int packect) {
-    int n = 0;
-    for (int i = 200 * packect; i < 200; i += 1, n += 6) {
-      if (i >= points.size()) break;
-      PVector p = points.get(i);
+ 
+  
+  int serializeToBytes(byte[] A, int packect) {
+    for (int i = 0; i < 200; i += 1) {
+      int n = i * 6;
+      int idx = i + packect * 200;
+      if (idx >= points.size()) 
+        return i;
+      PVector p = points.get(idx);
       short x = (short)(p.x);
       short y = (short)(p.y);
       short z = (short)(p.z);
@@ -113,6 +130,7 @@ class COM {
       A[n + 4] = (byte)(z & 0xff);
       A[n + 5] = (byte)((z >> 8) & 0xff);
     }
+    return 200;
   }
 }
 

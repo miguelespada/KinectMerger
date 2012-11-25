@@ -36,23 +36,27 @@ void sendCoMs() {
     }
 
     myMessage.add(s);
+    println(s);
+    myMessage.add(frameCount);
     oscP5.send(myMessage, myRemoteLocation);
   }
 }
 void sendPCs() {
-
   byte[] bytes = new byte[1200];
   for (COM c: kinectData.coms) {
     int packect = 0;
-    
-    while(c.canSerializeMoreData(packect)){
+    boolean hasData = true;
+    while(hasData){
       OscMessage myMessage = new OscMessage("/pc");
       myMessage.add(K);
       myMessage.add(c.id);
       for(int i = 0; i < 1200; i++) bytes[i] = 0;
-      c.serializeToBytes(bytes, packect);
+      int l = c.serializeToBytes(bytes, packect);
       myMessage.add(bytes);
+      myMessage.add(l);
+      myMessage.add(frameCount);
       oscP5.send(myMessage, myRemoteLocation);
+      if(l < 200) hasData = false;
       packect += 1;
     }
   }
