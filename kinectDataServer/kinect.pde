@@ -112,7 +112,6 @@ class COM {
   }
   
  
-  
   int serializeToBytes(byte[] A, int packect) {
     for (int i = 0; i < 200; i += 1) {
       int n = i * 6;

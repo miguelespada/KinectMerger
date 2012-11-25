@@ -11,6 +11,7 @@ int[] userMap;
 
 int K; 
 int frame = 0, maxFrame = 0;
+int frameSaving = 0;
 
 color[]   userColors = { 
   color(255, 0, 0), 
@@ -88,7 +89,7 @@ void draw()
     context.drawCamFrustum();
 
     if (saving) {
-      String fileName = "snapshot_" + frame + ".ply";
+      String fileName = "snapshot_" + frameSaving + ".ply";
       kinectData.saveFrame(fileName);
       msg = "Saved " + fileName;
       saving = false;
@@ -111,7 +112,7 @@ void draw()
   
   kinectData.drawCoM();
   
-  if (frameRate % 30 == 0) sendPing(); 
+  if (frameCount % 30 == 0) sendPing(); 
   if (bSendCOMData) sendCoMs();
   if (bSendPCData) sendPCs();
 

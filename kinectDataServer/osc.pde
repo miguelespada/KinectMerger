@@ -13,13 +13,15 @@ void setupOsc() {
 void oscEvent(OscMessage theOscMessage) {
 
   if (theOscMessage.checkAddrPattern("/save")==true) {
-    frame = theOscMessage.get(0).intValue();  
+    frameSaving = theOscMessage.get(0).intValue();  
     saving = true;
     return;
   } 
 }
 void sendPing() {
   OscMessage myMessage = new OscMessage("/ping");
+  myMessage.add(K);
+  myMessage.add(localPort);
   oscP5.send(myMessage, myRemoteLocation);
 }
 
