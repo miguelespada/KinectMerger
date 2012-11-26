@@ -7,7 +7,7 @@ float  rotY = radians(0);
 PVector[] realWorldMap;
 int[]   depthMap;
 
-int   steps = 10;
+int   steps = 6;
 boolean saveFrame = false;
 void setup()
 {
@@ -60,7 +60,7 @@ void draw()
     }
   }
   if (saveFrame) {
-    String str = "";
+   
     int n = 0;
     for (int y=0;y < context.depthHeight();y+=1)
     {
@@ -68,18 +68,10 @@ void draw()
       {
         int index = x + y * context.depthWidth();
         PVector realWorldPoint = context.depthMapRealWorld()[index];
-        if(realWorldPoint.z > 0){
-          point(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
-          String s = realWorldPoint.x + " " 
-           + realWorldPoint.y + " " + 
-           realWorldPoint.z;
-          str += s;
-          str += "\n";
+        if(realWorldPoint.z > 0)
           n += 1;
-        }
       }
     }
-    
     saveFrame = false;
     String fileName = "snapshot.ply";
     PrintWriter output;
@@ -93,8 +85,24 @@ void draw()
     output.println("property float y");
     output.println("property float z");
     output.println("end_header");
-    output.println(str);
+    for (int y=0;y < context.depthHeight();y+=1)
+    {
+      for (int x=0;x < context.depthWidth();x+=1)
+      {
+        int index = x + y * context.depthWidth();
+        PVector realWorldPoint = context.depthMapRealWorld()[index];
+        if(realWorldPoint.z > 0){
+          point(realWorldPoint.x, realWorldPoint.y, realWorldPoint.z);
+          String s = realWorldPoint.x + " " 
+           + realWorldPoint.y + " " + 
+           realWorldPoint.z;
+          output.println(s); 
+        }
+      }
+    }
     output.close();
+    
+    
     
    
     

@@ -16,6 +16,10 @@ void oscEvent(OscMessage theOscMessage) {
     frameSaving = theOscMessage.get(0).intValue();  
     saving = true;
     return;
+  }   
+  if (theOscMessage.checkAddrPattern("/reset")==true) {
+    frame = 0;
+    return;
   } 
 }
 void sendPing() {
