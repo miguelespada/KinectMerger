@@ -16,9 +16,10 @@ void oscEvent(OscMessage theOscMessage) {
     frameSaving = theOscMessage.get(0).intValue();  
     saving = true;
     return;
-  }   
-  if (theOscMessage.checkAddrPattern("/reset")==true) {
-    frame = 0;
+  } 
+    
+  if (theOscMessage.checkAddrPattern("/play")==true) {
+    frame = theOscMessage.get(0).intValue();
     return;
   } 
 }

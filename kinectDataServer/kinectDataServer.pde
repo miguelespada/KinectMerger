@@ -54,8 +54,6 @@ void setup()
 
   if (bOnline)
     setupKinect();
-  else
-    frameRate(15);
 
   perspective(radians(45), 
   float(width)/float(height), 
@@ -99,7 +97,6 @@ void draw()
     String fileName = folder + frame + ".ply";
     try{
       BufferedReader reader = createReader(fileName);    
-      frame = (frame + 1) % maxFrame;
       if(reader != null){
         processAndDrawFileData(reader);
         reader.close();
